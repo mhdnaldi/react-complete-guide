@@ -1,16 +1,18 @@
 import React, { Component } from "react";
-// import Radium, { StyleRoot } from "radium";
-import styled from "styled-components";
 import "./App.css";
+import styled from "styled-components";
 import Person from "./Person/Person";
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.alt ? "red" : "green")};
-  color: white;
-  padding: 10px 16px;
+  background-color: ${(props) => (props.alt ? "red" : "blue")};
+  padding: 10px 20px;
   margin: 0 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+
   &:hover {
-    background-color: ${(props) => (props.alt ? "lightgreen" : "salmon")};
+    background-color: ${(props) => (props.alt ? "tomato" : "aqua")};
     color: #111;
   }
 `;
@@ -18,47 +20,47 @@ const StyledButton = styled.button`
 class App extends Component {
   state = {
     persons: [
-      { id: "jashdkasjd", name: "Naruto", age: 20 },
-      { id: "sdfghjk", name: "Sasuke", age: 21 },
-      { id: "sdhaksjdka", name: "Sakura", age: 21 },
+      { id: "jsdhfdfhjk", name: "Naruto", age: 20 },
+      { id: "jasdhfjk", name: "Sasuke", age: 21 },
+      { id: "asdasd", name: "Sakura", age: 21 },
     ],
-    showPersons: false,
   };
 
-  fullNameHandler = () => {
-    this.setState({
-      persons: [
-        { id: "jashdkasjd", name: "Naruto Uzumaki", age: 20 },
-        { id: "sdfghjk", name: "Sasuke Uchiha", age: 21 },
-        { id: "sdhaksjdka", name: "Sakura Haruno", age: 21 },
-      ],
-    });
-  };
+  showPersons = false;
 
   showPersonsHandler = () => {
-    let show = this.state.showPersons;
-    this.setState({ showPersons: !show });
+    let isShow = this.state.showPersons;
+    this.setState({ showPersons: !isShow });
   };
 
-  deletePersonHandler = (id) => {
-    let persons = [...this.state.persons];
-    persons.splice(id, 1);
-    this.setState({ persons: persons });
+  deletePersonHandler = (index) => {
+    const person = [...this.state.persons];
+    person.splice(index, 1);
+    this.setState({ persons: person });
   };
 
-  inputTextHandler = (event, id) => {
-    let personIndex = this.state.persons.findIndex((p) => {
-      return p.id === id;
+  changedNameHandler = (e, id) => {
+    const personIndex = this.state.persons.findIndex((person) => {
+      return id === person.id;
     });
-    let person = { ...this.state.persons[personIndex] };
-    person.name = event;
-    let persons = [...this.state.persons];
+    const person = { ...this.state.persons[personIndex] };
+    person.name = e;
+
+    const persons = [...this.state.persons];
     persons[personIndex] = person;
     this.setState({ persons: persons });
   };
 
   render() {
     let persons = null;
+    let style = [];
+    if (this.state.persons.length <= 2) {
+      style.push("red");
+    }
+    if (this.state.persons.length <= 1) {
+      style.push("bold");
+    }
+
     if (this.state.showPersons) {
       persons = this.state.persons.map((person, index) => {
         return (
@@ -66,33 +68,19 @@ class App extends Component {
             name={person.name}
             age={person.age}
             key={index}
-            delete={() => this.deletePersonHandler(index)}
-            change={(event) =>
-              this.inputTextHandler(event.target.value, person.id)
+            changed={(event) =>
+              this.changedNameHandler(event.target.value, person.id)
             }
+            delete={() => this.deletePersonHandler(index)}
           />
         );
       });
     }
-
-    const classes = [];
-
-    if (this.state.persons.length <= 2) {
-      classes.push("red");
-    }
-
-    if (this.state.persons.length <= 1) {
-      classes.push("bold");
-    }
-
     return (
       <div className="App">
-        <h1 className={classes.join(" ")}>Team Kakashi</h1>
-        {/* <button style={btn} onClick={this.fullNameHandler}>
-          Fullname
-        </button> */}
+        <h1 className={style.join(" ")}>Team Kakashi</h1>
         <StyledButton
-          alt={this.state.showPersons}
+          alt={`${this.state.showPersons}`}
           onClick={this.showPersonsHandler}
         >
           Show
