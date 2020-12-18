@@ -1,23 +1,10 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import "./App.css";
-import styled from "styled-components";
-import Person from "./Person/Person";
+import Person from "../components/Persons/Person/Person";
+import Cockpit from "../components/Cockpit/Cockpit";
 
-const StyledButton = styled.button`
-  background-color: ${(props) => (props.alt ? "red" : "blue")};
-  padding: 10px 20px;
-  margin: 0 10px;
-  color: #fff;
-  cursor: pointer;
-  transition: 0.3s;
-
-  &:hover {
-    background-color: ${(props) => (props.alt ? "tomato" : "aqua")};
-    color: #111;
-  }
-`;
-
-class App extends Component {
+// PURE COMPONENT IS BETTER THAN REGULAR COMPONENT FOR MEMORY
+class App extends PureComponent {
   state = {
     persons: [
       { id: "jsdhfdfhjk", name: "Naruto", age: 20 },
@@ -51,15 +38,12 @@ class App extends Component {
     this.setState({ persons: persons });
   };
 
+  // shouldComponentUpdate(nextProps, nextState) {
+  // return true or false
+  // } // IMPORTANT FOR MEMORY EFFICIENCY, IT ONLY RENDER THE PROPS IN CERTAIN CONDITION
+
   render() {
     let persons = null;
-    let style = [];
-    if (this.state.persons.length <= 2) {
-      style.push("red");
-    }
-    if (this.state.persons.length <= 1) {
-      style.push("bold");
-    }
 
     if (this.state.showPersons) {
       persons = this.state.persons.map((person, index) => {
@@ -78,13 +62,11 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1 className={style.join(" ")}>Team Kakashi</h1>
-        <StyledButton
-          alt={`${this.state.showPersons}`}
-          onClick={this.showPersonsHandler}
-        >
-          Show
-        </StyledButton>
+        <Cockpit
+          showPersons={this.state.showPersons}
+          show={this.showPersonsHandler}
+          persons={this.state.persons}
+        />
         {persons}
       </div>
     );
